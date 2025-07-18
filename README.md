@@ -16,18 +16,22 @@ cd credit-service
 docker-compose up --build
 ```
 
-### 1. CLI Mode
-**Interactive:**
+### How to run the application
 ```bash
-docker exec -it credit-service java -jar credit-service.jar
+mvn clean package
 ```
-
-**File Input:**
+#### 1. CLI Mode
+**Interactive or File Input**
 ```bash
-docker exec -it credit-service java -jar credit-service.jar /app/input_samples/example.txt
+java -jar target/credit-service.jar --cli
 ```
+**Sample Output**
+![Sample Response Interactive](src/main/resources/sample_interactive.png)
 
-### 2. API Mode
+#### 2. API Mode
+```bash
+java -jar target/credit-service.jar
+```
 ```bash
 curl -X POST localhost:9093/credit-service/api/v1/loan/calculate \
   -H "Content-Type: application/json" \
@@ -41,7 +45,7 @@ curl -X POST localhost:9093/credit-service/api/v1/loan/calculate \
   }'
 ```
 
-Sample Response :
+**Sample Response :**
 ```json
 {
     "message": "Success to calculate data",
@@ -56,18 +60,22 @@ Sample Response :
 }
 ```
 
-## File Input Format
-Place files in `./input_samples`:
+#### File Input Format
+Place files in `./input_samples` or using custom_path like `./custom/input/file_inputs.txt`.
+Only allowed `.txt` extension files.
+
+#### Key-value format
 ```text
-# Key-value format
 vehicleType=Mobil
 vehicleCondition=Baru
 vehicleYear=2025
 totalLoan=100000000
 tenure=3
 downPayment=35000000
+```
 
-# Or JSON
+#### JSON format
+```text
 {
   "vehicleType": "Mobil",
   "vehicleCondition": "Baru",
