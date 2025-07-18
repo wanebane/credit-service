@@ -1,13 +1,11 @@
 package com.rivaldy.creditservices.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.rivaldy.creditservices.CreditServicesApplication;
 import com.rivaldy.creditservices.model.dto.InstallmentDto;
 import com.rivaldy.creditservices.model.request.LoanRequest;
 import com.rivaldy.creditservices.service.LoanService;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -35,7 +33,7 @@ public class CLIController implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if (args.length > 0) {
+        if (args.length > 0 && args[0].equalsIgnoreCase("--cli")) {
             showModeSelectionMenu();
         }
     }
