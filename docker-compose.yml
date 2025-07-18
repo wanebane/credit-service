@@ -2,7 +2,7 @@ services:
   app:
     build: .
     ports:
-      - "8080:8030"
+      - "8081:8080"
     volumes:
       - ./input_samples:/app/input_samples
     stdin_open: true

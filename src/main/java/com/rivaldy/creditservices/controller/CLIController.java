@@ -35,14 +35,8 @@ public class CLIController implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        if(System.getenv("SKIP_INTERACTIVE") != null){
-            if (args.length > 0 && args[0].endsWith(".txt")) {
-                processFileInput(args[0]);
-                return;
-            }
+        if (args.length > 0) {
             showModeSelectionMenu();
-        }else{
-            SpringApplication.run(CreditServicesApplication.class, args);
         }
     }
 
@@ -201,7 +195,7 @@ public class CLIController implements CommandLineRunner {
                 if (amount > 0) {
                     return amount;
                 }
-//                System.out.println("Amount must be between 1 and 1.000.000.000");
+                System.out.println("Amount must be between 1 and 1.000.000.000");
             } catch (NumberFormatException e) {
                 System.out.println("Silahkan input angka yang benar");
             }
@@ -234,7 +228,7 @@ public class CLIController implements CommandLineRunner {
                 if (dp >= minAmount && dp < totalLoan) {
                     return dp;
                 }
-                System.out.printf("DP must be between %s and %s\n",
+                System.out.printf("Down Payment must be between %s and %s\n",
                         currencyFormatter.format(minAmount),
                         currencyFormatter.format(totalLoan - 1)
                 );

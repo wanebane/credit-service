@@ -1,18 +1,13 @@
-FROM maven:3.9.10-eclipse-temurin-17-noble AS builder
-COPY pom.xml /build/
-COPY src /build/src
-WORKDIR /build/
-RUN mvn install
-
-FROM eclipse-temurin:17.0.15_6-jre-ubi9-minimal
+# Build stage
+FROM maven:3.9.6-eclipse-temurin-17-alpine AS build
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-ARG JAR_FILE=/build/target/*.jar
-
-COPY --from=builder ${JAR_FILE} /app/app.jar
-
-RUN mkdir -p /app/input_samples
-
-EXPOSE 8020
-
+# Run stage
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
+EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
