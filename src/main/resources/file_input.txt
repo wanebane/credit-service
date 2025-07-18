@@ -1,0 +1,6 @@
+vehicleType=Mobil
+vehicleCondition=Baru
+vehicleYear=2025
+totalLoan=100000000
+tenure=6
+downPayment=35000000

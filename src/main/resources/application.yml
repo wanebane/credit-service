@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: credit-services
+
+server:
+  port: 9090
+  servlet:
+    context-path: /credit-service
