@@ -4,14 +4,12 @@ import com.rivaldy.creditservices.exception.BadRequestException;
 import com.rivaldy.creditservices.model.dto.InstallmentDto;
 import com.rivaldy.creditservices.model.request.LoanRequest;
 import com.rivaldy.creditservices.util.ValidationInput;
+import com.rivaldy.creditservices.util.enumurate.BaseRate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.rivaldy.creditservices.util.constant.AppConstant.BASE_RATE_CAR;
-import static com.rivaldy.creditservices.util.constant.AppConstant.BASE_RATE_MOTORCYCLE;
 
 @Slf4j
 @Service
@@ -37,7 +35,7 @@ public class LoanService {
     }
 
     private double calculateDynamicRate(String vehicleType, int year, double currentRate) {
-        double baseRate = vehicleType.equalsIgnoreCase("mobil") ? BASE_RATE_CAR : BASE_RATE_MOTORCYCLE;
+        double baseRate = BaseRate.getBaseRate(vehicleType);
         if (year == 1){
             return baseRate;
         }

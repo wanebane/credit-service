@@ -1,6 +1,7 @@
 package com.rivaldy.creditservices.util;
 
 import com.rivaldy.creditservices.model.request.LoanRequest;
+import com.rivaldy.creditservices.util.enumurate.DownPaymentRate;
 import io.micrometer.common.util.StringUtils;
 
 import java.time.Year;
@@ -69,10 +70,10 @@ public class ValidationInput {
             if (principal < 0){
                 errors.add("Down Payment must be lower than Total Loan Amount");
             }
-            double minDPPercentage = isConditionNew ? 0.35 : 0.25;
+            double minDPPercentage = DownPaymentRate.getBaseDownPayment(request.getVehicleCondition());
             double minDP = request.getTotalLoanAmount() * minDPPercentage;
             if (request.getDownPayment() < minDP){
-                errors.add("Down Payment should input >="+minDP);
+                errors.add("Down Payment should input >= "+FormatData.currencyFormat(minDP));
             }
         }
         return errors;

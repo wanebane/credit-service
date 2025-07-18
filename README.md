@@ -19,12 +19,12 @@ docker-compose up --build
 ### 1. CLI Mode
 **Interactive:**
 ```bash
-docker exec -it credit-simulator_app java -jar credit-simulator.jar
+docker exec -it credit-service java -jar credit-service.jar
 ```
 
 **File Input:**
 ```bash
-docker exec -it credit-simulator_app java -jar credit-simulator.jar /app/input_samples/example.txt
+docker exec -it credit-service java -jar credit-service.jar /app/input_samples/example.txt
 ```
 
 ### 2. API Mode

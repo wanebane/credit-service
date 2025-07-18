@@ -3,6 +3,6 @@ spring:
     name: credit-services
 
 server:
-  port: 9093
+  port: 8080
   servlet:
     context-path: /credit-service

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rivaldy.creditservices.model.dto.InstallmentDto;
 import com.rivaldy.creditservices.model.request.LoanRequest;
 import com.rivaldy.creditservices.service.LoanService;
+import com.rivaldy.creditservices.util.enumurate.DownPaymentRate;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -216,7 +217,7 @@ public class CLIController implements CommandLineRunner {
     }
 
     private double askDownPayment(String condition, double totalLoan) {
-        double minPercentage = condition.equalsIgnoreCase("baru") ? 0.35 : 0.25;
+        double minPercentage = DownPaymentRate.getBaseDownPayment(condition);
         double minAmount = totalLoan * minPercentage;
 
         while (true) {
