@@ -1,7 +1,6 @@
 package com.rivaldy.creditservices.util;
 
 import com.rivaldy.creditservices.model.request.LoanRequest;
-import com.rivaldy.creditservices.util.enumurate.DownPaymentRate;
 import io.micrometer.common.util.StringUtils;
 
 import java.time.Year;
@@ -12,7 +11,9 @@ import static com.rivaldy.creditservices.util.constant.AppConstant.*;
 
 public class ValidationInput {
 
-    public static List<String> validationRequest(LoanRequest request){
+    private final ValidationRate validationRate = new ValidationRate();
+
+    public List<String> validationRequest(LoanRequest request){
         List<String> errors = new ArrayList<>();
         String reqTypes = request.getVehicleType();
         boolean isEmptyTypes = StringUtils.isEmpty(reqTypes);
@@ -28,12 +29,12 @@ public class ValidationInput {
         if (isEmptyCondition){
             errors.add(String.format(NULL_MSG, "Vehicle Condition"));
         }
-        if (!isEmptyTypes && !VEHICLE_CONDITION.contains(request.getVehicleCondition().toLowerCase())){
+        if (!isEmptyCondition && !VEHICLE_CONDITION.contains(request.getVehicleCondition().toLowerCase())){
             errors.add("Vehicle Condition input must be 'Baru' or 'Bekas'");
         }
 
         int currentYear = Year.now().getValue();
-        boolean isConditionNew = request.getVehicleCondition().equalsIgnoreCase("baru");
+        boolean isConditionNew = !isEmptyCondition && request.getVehicleCondition().equalsIgnoreCase("baru");
         boolean isNullYear = request.getVehicleYear() == null;
         if (isNullYear){
             errors.add(String.format(NULL_MSG, "Vehicle Year"));
@@ -46,14 +47,15 @@ public class ValidationInput {
         if (isNullTotalLoan){
             errors.add(String.format(NULL_MSG, "Total Loan Amount"));
         }
-        if (!isNullTotalLoan && (request.getTotalLoanAmount() <= 0 || request.getTotalLoanAmount() > MAX_LOAN_AMOUNT)){
-            errors.add("Total Loan Amount must be between 0 and "+MAX_LOAN_AMOUNT);
+        if (!isNullTotalLoan && (request.getTotalLoanAmount() == 0 || request.getTotalLoanAmount() > MAX_LOAN_AMOUNT)){
+            errors.add("Total Loan Amount must be between 0 and "+FormatData.currencyFormat(MAX_LOAN_AMOUNT));
         }
 
         boolean isNullTenure = request.getLoanTenure() == null;
         if (isNullTenure){
             errors.add(String.format(NULL_MSG, "Loan Tenure"));
         }
+
         if (!isNullTenure && (request.getLoanTenure() < 1 || request.getLoanTenure() > MAX_TENURE)){
             errors.add("Loan Tenure must be between 1 and "+MAX_TENURE);
         }
@@ -62,15 +64,15 @@ public class ValidationInput {
         if (isNullDP){
             errors.add(String.format(NULL_MSG, "Down Payment"));
         }
-        if (!isNullDP && request.getDownPayment() < 0){
+        if (!isNullDP && request.getDownPayment() == 0){
             errors.add("Down Payment cannot input 0");
         }
-        if (!isNullDP && !isNullTotalLoan && request.getDownPayment() > 0){
+        if (!isNullDP && !isNullTotalLoan && !isEmptyCondition && request.getDownPayment() > 0){
             double principal = request.getTotalLoanAmount() - request.getDownPayment();
             if (principal < 0){
                 errors.add("Down Payment must be lower than Total Loan Amount");
             }
-            double minDPPercentage = DownPaymentRate.getBaseDownPayment(request.getVehicleCondition());
+            double minDPPercentage = validationRate.getBaseDownPayment(request.getVehicleCondition());
             double minDP = request.getTotalLoanAmount() * minDPPercentage;
             if (request.getDownPayment() < minDP){
                 errors.add("Down Payment should input >= "+FormatData.currencyFormat(minDP));

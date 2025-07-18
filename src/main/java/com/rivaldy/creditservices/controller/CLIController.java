@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rivaldy.creditservices.model.dto.InstallmentDto;
 import com.rivaldy.creditservices.model.request.LoanRequest;
 import com.rivaldy.creditservices.service.LoanService;
-import com.rivaldy.creditservices.util.enumurate.DownPaymentRate;
+import com.rivaldy.creditservices.util.ValidationRate;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -31,6 +31,7 @@ public class CLIController implements CommandLineRunner {
 
     private final Scanner scanner = new Scanner(System.in);
     private final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+    private final ValidationRate validationRate = new ValidationRate();
 
     @Override
     public void run(String... args) {
@@ -83,7 +84,7 @@ public class CLIController implements CommandLineRunner {
         }
     }
 
-    private void processFileInput(String filePath) {
+    public void processFileInput(String filePath) {
         try {
             Path path = Paths.get(filePath);
             String content = Files.readString(path);
@@ -99,7 +100,7 @@ public class CLIController implements CommandLineRunner {
         }
     }
 
-    private LoanRequest parseInput(String content) {
+    public LoanRequest parseInput(String content) {
         try {
             if (content.trim().startsWith("{")) {
                 return objectMapper.readValue(content, LoanRequest.class);
@@ -146,7 +147,7 @@ public class CLIController implements CommandLineRunner {
         }
     }
 
-    private String askVehicleType() {
+    public String askVehicleType() {
         while (true) {
             System.out.print("Tipe Kendaraan [Mobil/Motor]: ");
             String input = scanner.nextLine().trim().toLowerCase();
@@ -157,7 +158,7 @@ public class CLIController implements CommandLineRunner {
         }
     }
 
-    private String askVehicleCondition() {
+    public String askVehicleCondition() {
         while (true) {
             System.out.print("Condition [Baru/Bekas]: ");
             String input = scanner.nextLine().trim().toLowerCase();
@@ -168,7 +169,7 @@ public class CLIController implements CommandLineRunner {
         }
     }
 
-    private int askVehicleYear(String condition) {
+    public int askVehicleYear(String condition) {
         int currentYear = Year.now().getValue();
         int minYear = condition.equalsIgnoreCase("baru") ? currentYear - 1 : 1900;
 
@@ -186,7 +187,7 @@ public class CLIController implements CommandLineRunner {
         }
     }
 
-    private double askTotalLoan() {
+    public double askTotalLoan() {
         while (true) {
             System.out.print("Total Angka Pinjaman: ");
             try {
@@ -201,7 +202,7 @@ public class CLIController implements CommandLineRunner {
         }
     }
 
-    private int askTenure() {
+    public int askTenure() {
         while (true) {
             System.out.print("Tenor Pinjaman (1-6 tahun): ");
             try {
@@ -216,8 +217,8 @@ public class CLIController implements CommandLineRunner {
         }
     }
 
-    private double askDownPayment(String condition, double totalLoan) {
-        double minPercentage = DownPaymentRate.getBaseDownPayment(condition);
+    public double askDownPayment(String condition, double totalLoan) {
+        double minPercentage = validationRate.getBaseDownPayment(condition);
         double minAmount = totalLoan * minPercentage;
 
         while (true) {

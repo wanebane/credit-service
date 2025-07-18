@@ -86,6 +86,13 @@ downPayment=35000000
 }
 ```
 
+#### 2. Unit Test
+```bash
+# Run locally
+mvn test
+```
+
+
 ## Development
 ```bash
 # Run locally without Docker

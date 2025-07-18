@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class LoanRequest {
 
     private String vehicleType;

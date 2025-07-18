@@ -2,8 +2,6 @@ package com.rivaldy.creditservices.util.enumurate;
 
 import lombok.Getter;
 
-import java.util.stream.Stream;
-
 import static com.rivaldy.creditservices.util.constant.AppConstant.*;
 
 public enum DownPaymentRate {
@@ -20,15 +18,5 @@ public enum DownPaymentRate {
     DownPaymentRate(String vehicleCondition, double vehicleBaseDP) {
         this.vehicleCondition = vehicleCondition;
         this.vehicleBaseDP = vehicleBaseDP;
-    }
-
-    public static double getBaseDownPayment(String vehicleCondition){
-        DownPaymentRate downPaymentRate = Stream.of(DownPaymentRate.values())
-                .filter(v -> v.getVehicleCondition().equalsIgnoreCase(vehicleCondition.toLowerCase()))
-                .findAny().orElse(null);
-        if (downPaymentRate == null){
-            return 0.0;
-        }
-        return downPaymentRate.getVehicleBaseDP();
     }
 }
