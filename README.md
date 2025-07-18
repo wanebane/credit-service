@@ -23,14 +23,14 @@ mvn clean package
 #### 1. CLI Mode
 **Interactive or File Input**
 ```bash
-java -jar target/credit-service.jar --cli
+java -jar target/credit-simulator.jar --cli
 ```
 **Sample Output**
 ![Sample Response Interactive](src/main/resources/sample_interactive.png)
 
 #### 2. API Mode
 ```bash
-java -jar target/credit-service.jar
+java -jar target/credit-simulator.jar
 ```
 ```bash
 curl -X POST localhost:9093/credit-service/api/v1/loan/calculate \

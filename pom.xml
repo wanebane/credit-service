@@ -34,7 +34,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>credit-service</finalName>
+		<finalName>credit-simulator</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
