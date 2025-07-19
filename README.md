@@ -26,6 +26,7 @@ mvn clean package
 java -jar target/credit-simulator.jar --cli
 ```
 **Sample Output**
+
 ![Sample Response Interactive](src/main/resources/sample_interactive.png)
 
 #### 2. API Mode
