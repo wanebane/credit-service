@@ -37,8 +37,8 @@ public class ValidationRateTest {
 
     @Test
     void getBaseDownPayment_ShouldReturnCorrectRateForOld() {
-        assertEquals(0.25, validationRate.getBaseDownPayment("Lama"));
-        assertEquals(0.25, validationRate.getBaseDownPayment("lama"));
+        assertEquals(0.25, validationRate.getBaseDownPayment("Bekas"));
+        assertEquals(0.25, validationRate.getBaseDownPayment("bekas"));
     }
 
     @Test

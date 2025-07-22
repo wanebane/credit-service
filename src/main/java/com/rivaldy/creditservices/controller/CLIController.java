@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rivaldy.creditservices.model.dto.InstallmentDto;
 import com.rivaldy.creditservices.model.request.LoanRequest;
 import com.rivaldy.creditservices.service.LoanService;
+import com.rivaldy.creditservices.util.FormatData;
 import com.rivaldy.creditservices.util.ValidationRate;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -13,7 +14,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.NumberFormat;
 import java.time.Year;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,7 +30,6 @@ public class CLIController implements CommandLineRunner {
     private final ObjectMapper objectMapper;
 
     private final Scanner scanner = new Scanner(System.in);
-    private final NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
     private final ValidationRate validationRate = new ValidationRate();
 
     @Override
@@ -50,7 +49,7 @@ public class CLIController implements CommandLineRunner {
         scanner.nextLine();
 
         switch (choice) {
-            case 1 -> run();
+            case 1 -> run("--cli");
             case 2 -> {
                 System.out.println("Terima kasih, program selesai!");
                 System.exit(0);
@@ -66,38 +65,56 @@ public class CLIController implements CommandLineRunner {
         System.out.println("3. Keluar");
         System.out.print("Pilihan Anda (1/2/3): ");
 
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        while(true){
+            try{
+                int choice = scanner.nextInt();
+                scanner.nextLine();
+                showMenu(choice);
+            } catch (InputMismatchException ex){
+                System.out.println("Tolong masukkan angka pilihan anda : 1/2/3");
+                showModeSelectionMenu();
+                break;
+            }
+        }
 
-        switch (choice) {
-            case 1 -> interactiveMode();
-            case 2 -> {
-                System.out.print("Masukkan path file input (contoh: input.txt): ");
-                String filePath = scanner.nextLine();
-                processFileInput(filePath);
+    }
+
+    public void showMenu(int choice){
+        System.out.println("Masuk ke showMenu");
+        while (true){
+            switch (choice) {
+                case 1 -> interactiveMode();
+                case 2 -> processFileInput();
+                case 3 -> {
+                    System.out.println("Terima kasih!");
+                    System.exit(0);
+                }
+                default -> {
+                    System.out.println("Pilihan tidak valid! Tolong masukkan angka 1/2/3!");
+                    showModeSelectionMenu();
+                }
             }
-            case 3 -> {
-                System.out.println("Terima kasih!");
-                System.exit(0);
-            }
-            default -> System.out.println("Pilihan tidak valid!");
         }
     }
 
-    public void processFileInput(String filePath) {
-        try {
-            Path path = Paths.get(filePath);
-            String content = Files.readString(path);
-            LoanRequest request = parseInput(content);
+    public void processFileInput(/*String filePath*/) {
+        System.out.print("Masukkan path file input (contoh: input.txt): ");
+        String filePath = scanner.nextLine();
+        while (true){
+            try {
+                Path path = Paths.get(filePath);
+                String content = Files.readString(path);
+                LoanRequest request = parseInput(content);
 
-            List<InstallmentDto> installments = calculatorService.calculate(request);
-            askToRepeatOrExit();
-        } catch (IOException e) {
-            System.err.println("Error reading file: " + e.getMessage());
-            throw new RuntimeException(e);
-        } catch (IllegalArgumentException e) {
-            System.err.println("Invalid input: " + e.getMessage());
+                List<InstallmentDto> installments = calculatorService.calculate(request);
+                askToRepeatOrExit();
+            } catch (IOException e) {
+                System.err.println("Data tidak ditemukan pada path " + e.getMessage() + ", silahkan coba path lainnya!");
+                processFileInput();
+                break;
+            }
         }
+
     }
 
     public LoanRequest parseInput(String content) {
@@ -121,8 +138,11 @@ public class CLIController implements CommandLineRunner {
                     Double.parseDouble(params.get("downPayment"))
             );
         } catch (Exception e) {
-            throw new IllegalArgumentException("Invalid file format", e);
+            System.out.println("Format tidak valid, tolong diubah lagi!");
+            showMenu(2);
+            return null;
         }
+
     }
 
     private void interactiveMode() {
@@ -151,10 +171,10 @@ public class CLIController implements CommandLineRunner {
         while (true) {
             System.out.print("Tipe Kendaraan [Mobil/Motor]: ");
             String input = scanner.nextLine().trim().toLowerCase();
-            if (VEHICLE_TYPES.contains(input)){
-                return input;
+            if (!VEHICLE_TYPES.contains(input)){
+                System.out.println("Input Salah! Silahkan input 'Mobil' or 'Motor'");
             }
-            System.out.println("Input Salah! Silahkan input 'Mobil' or 'Motor'");
+            return input;
         }
     }
 
@@ -222,15 +242,15 @@ public class CLIController implements CommandLineRunner {
         double minAmount = totalLoan * minPercentage;
 
         while (true) {
-            System.out.printf("Down Payment (min %s): ", currencyFormatter.format(minAmount));
+          System.out.printf("Down Payment (min %s): ", FormatData.currencyFormat(minAmount));
             try {
                 double dp = Double.parseDouble(scanner.nextLine());
                 if (dp >= minAmount && dp < totalLoan) {
                     return dp;
                 }
                 System.out.printf("Down Payment must be between %s and %s\n",
-                        currencyFormatter.format(minAmount),
-                        currencyFormatter.format(totalLoan - 1)
+                        FormatData.currencyFormat(minAmount),
+                        FormatData.currencyFormat(totalLoan)
                 );
             } catch (NumberFormatException e) {
                 System.out.println("Silahkan input angka yang benar");

@@ -26,14 +26,17 @@ mvn clean package
 java -jar target/credit-simulator.jar --cli
 ```
 **Sample Output**
+
+```text
 ![Sample Response Interactive](src/main/resources/sample_interactive.png)
+```
 
 #### 2. API Mode
 ```bash
 java -jar target/credit-simulator.jar
 ```
-```bash
-curl -X POST localhost:9093/credit-service/api/v1/loan/calculate \
+```ba
+curl -X POST localhost:8080/credit-service/api/v1/loan/calculate \
   -H "Content-Type: application/json" \
   -d '{
     "vehicleType": "Mobil",

@@ -3,11 +3,9 @@ package com.rivaldy.creditservices.service;
 import com.rivaldy.creditservices.exception.BadRequestException;
 import com.rivaldy.creditservices.model.dto.InstallmentDto;
 import com.rivaldy.creditservices.model.request.LoanRequest;
-import com.rivaldy.creditservices.util.ValidationRate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.extension.Extensions;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 

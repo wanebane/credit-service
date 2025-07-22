@@ -145,4 +145,5 @@ class CLIControllerTest {
         // Verify
         assertEquals(2020, result);
     }
+
 }
