@@ -27,9 +27,7 @@ java -jar target/credit-simulator.jar --cli
 ```
 **Sample Output**
 
-```text
 ![Sample Response Interactive](src/main/resources/sample_interactive.png)
-```
 
 #### 2. API Mode
 ```bash
