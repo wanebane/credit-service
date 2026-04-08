@@ -94,7 +94,7 @@ mvn test
 ```
 
 ### Sample
-[Test Folder](com/rivaldy/creditservices/controller/LoanController.java)
+[Test Folder](src/main/java/com/rivaldy/creditservices/controller/LoanController.java)
 
 
 ## Development
