@@ -93,6 +93,9 @@ downPayment=35000000
 mvn test
 ```
 
+### Sample
+[Test Folder](com/rivaldy/creditservices/controller)
+
 
 ## Development
 ```bash
